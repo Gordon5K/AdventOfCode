@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="2017\**" />
+    <Compile Remove="2018\**" />
+    <EmbeddedResource Remove="2017\**" />
+    <EmbeddedResource Remove="2018\**" />
+    <None Remove="2017\**" />
+    <None Remove="2018\**" />
+  </ItemGroup>
+
+</Project>

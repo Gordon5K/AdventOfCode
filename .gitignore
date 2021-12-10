@@ -1,0 +1,9 @@
+
+.vs/
+obj/
+bin/
+
+**/*ncrunch*
+
+**/csproj.user
+*.user
