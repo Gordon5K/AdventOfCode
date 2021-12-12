@@ -1,22 +1,143 @@
-﻿namespace AOC._2021
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace AOC._2021
 {
     class Day12 : TestClass, ITestClass
     {
-        private readonly string[] _readings;
+        private const string Start = "start";
+        private const string EndChar = "end";
+        private const byte SmallCharsLimit = 96;
+
+        private readonly Dictionary<string, HashSet<string>> _nodes;
+
         public Day12()
         {
-            _input = @"";
-            _readings = GetVerticalSplitLines();
+            _input = @"start-A
+start-b
+A-c
+A-b
+b-d
+A-end
+b-end";
+
+            var lines = GetVerticalSplitLines();
+            _nodes = new Dictionary<string, HashSet<string>>();
+
+            foreach(string line in lines)
+            {
+                string[] parts = line.Split('-');
+                string src = parts[0];
+                string dest = parts[1];
+
+                AddPath(src, dest);
+                AddPath(dest, src);
+            }
         }
+
 
         public object Task1()
         {
-            return 0;
+            int pathCount = 0;
+            var smallNodes = new HashSet<string>();
+            foreach (string dest in _nodes[Start])
+            {
+                pathCount += FindPath1(smallNodes, dest);
+            }
+
+            return pathCount;
         }
 
         public object Task2()
         {
-            return 0;
+            int pathCount = 0;
+            var path = new HashSet<string> { Start };
+            foreach (string dest in _nodes[Start])
+            {
+                pathCount += FindPath2(path, dest, usedSmallDouble: false);
+            }
+
+            return pathCount;
+        }
+
+        private void AddPath(string src, string dest)
+        {
+            if (!_nodes.TryGetValue(src, out HashSet<string> destinations))
+            {
+                destinations = new HashSet<string>();
+                _nodes.Add(src, destinations);
+            }
+            destinations.Add(dest);
+        }
+
+        private int FindPath1(HashSet<string> smallNodes, string node)
+        {
+            if (node == EndChar)
+            {
+                return 1;
+            }
+            
+            if(node == Start)
+            {
+                return 0;
+            }
+
+            if (node[0] > SmallCharsLimit) {
+
+                if (smallNodes.Contains(node))
+                {
+                    return 0;
+                }
+
+                smallNodes = smallNodes.ToHashSet();
+                smallNodes.Add(node);
+            }
+
+            int count = 0;
+            foreach (string dest in _nodes[node])
+            {
+                count += FindPath1(smallNodes, dest);
+            }
+
+            return count;
+        }
+
+        private int FindPath2(HashSet<string> smallNodes, string node, bool usedSmallDouble)
+        {
+            if (node == EndChar)
+            {
+                return 1;
+            }
+
+            if(node == Start && smallNodes.Count > 0)
+            {
+                return 0; //We can't go back to the Start node
+            }
+
+            if (node[0] > SmallCharsLimit)
+            {
+                if (smallNodes.Contains(node))
+                {
+                    //Allow doubles of a single small character
+                    if (usedSmallDouble)
+                    {
+                        return 0;
+                    }
+
+                    usedSmallDouble = true;
+                }
+
+                smallNodes = smallNodes.ToHashSet();
+                smallNodes.Add(node);
+            }
+
+            int count = 0;
+            foreach (string dest in _nodes[node])
+            {
+                count += FindPath2(smallNodes, dest, usedSmallDouble);
+            }
+
+            return count;
         }
     }
 }
