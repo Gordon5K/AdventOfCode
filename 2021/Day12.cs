@@ -13,13 +13,30 @@ namespace AOC._2021
 
         public Day12()
         {
-            _input = @"start-A
-start-b
-A-c
-A-b
-b-d
-A-end
-b-end";
+            _input = @"CI-hb
+IK-lr
+vr-tf
+lr-end
+XP-tf
+start-vr
+lr-io
+hb-qi
+end-CI
+tf-YK
+end-YK
+XP-lr
+XP-vr
+lr-EU
+tf-CI
+EU-vr
+start-tf
+YK-hb
+YK-vr
+start-EU
+lr-CI
+hb-XP
+XP-io
+tf-EU";
 
             var lines = GetVerticalSplitLines();
             _nodes = new Dictionary<string, HashSet<string>>();
@@ -51,7 +68,7 @@ b-end";
         public object Task2()
         {
             int pathCount = 0;
-            var path = new HashSet<string> { Start };
+            var path = new List<string> { Start };
             foreach (string dest in _nodes[Start])
             {
                 pathCount += FindPath2(path, dest, usedSmallDouble: false);
@@ -82,14 +99,14 @@ b-end";
                 return 0;
             }
 
-            if (node[0] > SmallCharsLimit) {
-
+            bool isSmall = node[0] > SmallCharsLimit;
+            if (isSmall) 
+            {
                 if (smallNodes.Contains(node))
                 {
                     return 0;
                 }
 
-                smallNodes = smallNodes.ToHashSet();
                 smallNodes.Add(node);
             }
 
@@ -99,10 +116,15 @@ b-end";
                 count += FindPath1(smallNodes, dest);
             }
 
+            if (isSmall)
+            {
+                smallNodes.Remove(node);
+            }
+
             return count;
         }
 
-        private int FindPath2(HashSet<string> smallNodes, string node, bool usedSmallDouble)
+        private int FindPath2(List<string> smallNodes, string node, bool usedSmallDouble)
         {
             if (node == EndChar)
             {
@@ -114,7 +136,8 @@ b-end";
                 return 0; //We can't go back to the Start node
             }
 
-            if (node[0] > SmallCharsLimit)
+            bool isSmall = node[0] > SmallCharsLimit;
+            if (isSmall)
             {
                 if (smallNodes.Contains(node))
                 {
@@ -127,7 +150,6 @@ b-end";
                     usedSmallDouble = true;
                 }
 
-                smallNodes = smallNodes.ToHashSet();
                 smallNodes.Add(node);
             }
 
@@ -135,6 +157,11 @@ b-end";
             foreach (string dest in _nodes[node])
             {
                 count += FindPath2(smallNodes, dest, usedSmallDouble);
+            }
+
+            if (isSmall)
+            {
+                smallNodes.RemoveAt(smallNodes.Count - 1);
             }
 
             return count;
