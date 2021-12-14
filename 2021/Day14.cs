@@ -135,16 +135,10 @@ CN -> C";
                         //Add the new pairs
                         IncrementDictionaryCount(newPairs, newPair1, count);
                         IncrementDictionaryCount(newPairs, newPair2, count);
-
-                        //Remove the old pair as it's been split
-                        IncrementDictionaryCount(newPairs, pair, count: -count);
                     }
                 }
 
-                foreach ((string pairKey, long count) in newPairs)
-                {
-                    IncrementDictionaryCount(_pairs, pairKey, count);
-                }
+                _pairs = newPairs;
             }
 
             return GetAnswer();
@@ -155,8 +149,6 @@ CN -> C";
             long minCount = long.MaxValue, maxCount = 0;
             foreach (var counts in _counts.Values)
             {
-                if (counts <= 0) continue;
-
                 if (counts < minCount)
                 {
                     minCount = counts;
