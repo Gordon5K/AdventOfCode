@@ -62,14 +62,7 @@ CN -> C";
                 IncrementCharCount(lines[0][i]);
 
                 string pair = new(new char[] { lines[0][i], lines[0][i + 1] });
-                if (!_pairs.ContainsKey(pair))
-                {
-                    _pairs.Add(pair, 1);
-                }
-                else
-                {
-                    _pairs[pair]++;
-                }
+                IncrementDictionaryCount(_pairs, pair, 1);
             }
 
             IncrementCharCount(lines[0][^1]);
