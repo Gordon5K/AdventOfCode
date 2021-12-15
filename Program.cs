@@ -6,7 +6,8 @@ namespace AOC
     {
         static void Main()
         {
-            var day = new _2021.Day14();
+            Console.Clear();
+            var day = new _2021.Day15();
             Console.WriteLine(day.Task1());
             Console.WriteLine(day.Task2());
             Console.ReadKey();
