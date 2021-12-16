@@ -6,7 +6,7 @@
         object Task2();
     } 
 
-    internal abstract class TestClass
+    public abstract class TestClass
     {
         protected string _input;
         protected string[] GetVerticalSplitLines() => _input.Split("\r\n");
