@@ -13,9 +13,11 @@ namespace AOC._2021
     {
         protected string _input;
 
-        protected string ReadInputFile()
+        protected string ReadInputFile(bool useDemo = false)
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "2021", GetType().Name, "input.txt");
+            string fileName = useDemo ? "input.demo.txt" : "input.txt";
+
+            string path = Path.Combine(Environment.CurrentDirectory, "2021", GetType().Name, fileName);
             return File.ReadAllText(path);
         }
 

@@ -53,7 +53,7 @@ namespace AOC._2021
 
         public object Task2()
         {
-            (int minIndex, _) = FindMin(_readings, _readings);
+            (int minIndex, int _) = FindMin(_readings, _readings);
 
             int midPoint = _readings[minIndex];
 
@@ -76,7 +76,7 @@ namespace AOC._2021
                 }
             }
 
-            (_, int min) = FindMin(subSearch.ToArray(), _readings);
+            (int _, int min) = FindMin(subSearch.ToArray(), _readings);
 
             return min;
         }
