@@ -152,11 +152,10 @@ namespace AOC._2021
                 return this with { Position = (byte)playerPosition, Score = (byte)(Score + playerPosition) };
             }
         }
-        record QGame(ulong ConcurrentGames, PlayerState PlayerState, PlayerState AltPlayerState);
 
         private const byte WinScore = 21;
 
-        private readonly Queue<QGame> _games = new();
+        Dictionary<(PlayerState p1, PlayerState p2), ulong> _games = new();
         private readonly Dictionary<byte, ulong> _playerWins = new();
 
         public ulong MostWins => _playerWins.Values.Max();
@@ -169,30 +168,45 @@ namespace AOC._2021
             _playerWins.Add(player1, 0);
             _playerWins.Add(player2, 0);
 
-            _games.Enqueue(new QGame(ConcurrentGames: 1,
+            _games.Add((
                 new PlayerState(player1, playerPositions[player1], (byte)playerScores[player1]),
-                new PlayerState(player2, playerPositions[player2], (byte)playerScores[player2])));
+                new PlayerState(player2, playerPositions[player2], (byte)playerScores[player2])), 1);
         }
 
         public void Play()
         {
+            ulong i = 0;
             while(_games.Count > 0)
             {
-                var game = _games.Dequeue();
+                Dictionary<(PlayerState player, PlayerState opponent), ulong> newGames = new();
 
                 var rolls = SpawnRolls();
-                foreach(var (rollTotal, count) in rolls)
+                foreach (((PlayerState player, PlayerState opponent), ulong gCount) in _games)
                 {
-                    PlayerState movedPlayer = game.PlayerState.Move(rollTotal);
-                    if(movedPlayer.Score >= WinScore)
+                    foreach (var (rollTotal, count) in rolls)
                     {
-                        _playerWins[game.PlayerState.PlayerId] += (game.ConcurrentGames * count);
-                    }
-                    else
-                    {
-                        _games.Enqueue(new QGame(game.ConcurrentGames * count, game.AltPlayerState, movedPlayer));
+                        PlayerState movedPlayer = player.Move(rollTotal);
+                        if (movedPlayer.Score >= WinScore)
+                        {
+                            _playerWins[player.PlayerId] += (gCount * count);
+                        }
+                        else
+                        {
+                            var nextRound = (opponent, movedPlayer); //Switch player and opponent
+                            ulong newGameCount = gCount * count;
+                            if (newGames.ContainsKey(nextRound))
+                            {
+                                newGames[nextRound] += newGameCount;
+                            }
+                            else
+                            {
+                                newGames.Add(nextRound, newGameCount);
+                            }
+                        }
                     }
                 }
+                i++;
+                _games = newGames;
             }
         }
 
