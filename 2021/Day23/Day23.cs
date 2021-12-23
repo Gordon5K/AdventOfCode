@@ -41,11 +41,6 @@ namespace AOC._2021
             ['D'] = 1000
         };
 
-        /// <summary>
-        /// skipMidLines removes the middle two positions of each column to simulate the part 1 input
-        /// </summary>
-        /// <param name="skipMidLines"></param>
-        /// <returns></returns>
         private GridState ReadGrid(int part)
         {
             _input = ReadInputFile(useDemo: false, part);
