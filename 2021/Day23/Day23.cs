@@ -6,12 +6,6 @@ using System.Text;
 
 namespace AOC._2021
 {
-//#############
-//#...........#
-//###B#C#B#D###
-//# A#D#C#A#
-//#########
-
     class Day23 : TestClass, ITestClass
     {
         private const char WallChar = '#';
@@ -301,13 +295,11 @@ namespace AOC._2021
             public int Height => Grid.GetLength(0);
             public int Width => Grid.GetLength(1);
 
-            public List<(int x, int y, char n, long score, long totalCost)> History = new();
-
             private static int Distance(int fromX, int fromY, int toX, int toY)
             {
                 return Math.Abs(toY - fromY) + Math.Abs(toX - fromX);
             }
-
+           
             private Cell[,] CopyGrid()
             {
                 Cell[,] newGrid = Grid.Clone() as Cell[,];
@@ -324,15 +316,7 @@ namespace AOC._2021
                 int moveDistance = Distance(fromX, fromY, toX, toY);
                 long moveCost = (long)pod.Cost * moveDistance;
 
-                var history = History.ToList();
-                history.Add((toX, toY, pod.Name, moveCost, Cost + moveCost));
-
-                return this with
-                {
-                    Grid = newGrid,
-                    Cost = Cost + moveCost,
-                    History = history
-                };
+                return new GridState(newGrid, Cost + moveCost);
             }
 
             public override int GetHashCode()
