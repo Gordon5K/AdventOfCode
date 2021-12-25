@@ -245,11 +245,6 @@ namespace AOC._2021
                 Values = values;
             }
 
-            public override string ToString()
-            {
-                return string.Join(',', Values);
-            }
-
             public AluValue Copy()
             {
                 return new AluValue(Values.Clone() as long[]);
